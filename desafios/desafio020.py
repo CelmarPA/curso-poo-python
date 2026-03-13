@@ -26,7 +26,7 @@ class Gamer:
         for game in self.jogos_favoritos:
             favoritos += f"\n:video_game: [blue]{game}[/blue]"
 
-        texto = (f"Nome real: [black on blue]{self.nome}[/black on blue]\n"
+        texto = (f"Nome real: [black on blue] {self.nome} [/black on blue]\n"
                  f"{favoritos}")
 
         ficha = Panel(texto, title=f"Jogador <{self.nick}>", width=50)
