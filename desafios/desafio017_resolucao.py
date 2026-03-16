@@ -4,25 +4,18 @@ from rich.text import Text
 
 
 class Produto:
-    """
-    Classe Produto
-
-    Cria a etiqueta de um produto com seu nome e valor.
-    """
 
     def __init__(self, nome: str, preco: float):
         self.nome = nome
         self.preco = preco
 
     def etiqueta(self) -> Panel:
-        valor = f"R${self.preco:,.2f}"
+        conteudo = f"{self.nome.center(30, ' ')}"
+        conteudo += f"{'-' * 30}"
+        precof = f"R${self.preco:,.2f}"
+        conteudo += f"{precof.center(30, '.')}"
 
-        texto = Text(f"{self.nome} "
-                     f"{'-' * 30} "
-                     f"{valor:.^30}",
-                     justify="center"
-                     )
-        etiqueta = Panel(texto, title="Produto", width=35)
+        etiqueta = Panel(conteudo, title="Produto", width=34)
 
         print(etiqueta)
 
