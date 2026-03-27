@@ -10,9 +10,9 @@ class Gamer:
     """
 
     def __init__(self, nome: str, nick: str):
-        self.nome = nome
-        self.nick = nick
-        self.jogos_favoritos = []
+        self.nome: str = nome
+        self.nick: str = nick
+        self.jogos_favoritos: list = []
 
     def add_favoritos(self, game: str):
         self.jogos_favoritos.append(game)

@@ -8,24 +8,31 @@ class Caneta:
     Simula o funcionamento de uma caneta colorida.
     """
 
-    def __init__(self, cor: str):
+    def __init__(self, cor: str = "azul"):
+        match cor.lower().strip():
+            case "azul":
+                cor = "blue"
+            case "vermelho" | "vermelha":
+                cor = "red"
+            case "verde":
+                cor = "green"
+            case "amarelo" | "amarela":
+                cor = "yellow"
+            case "preto" | "preta":
+                cor = "black"
+            case "branco" | "branca":
+                cor = "white"
+            case _:
+                cor = "white"
+
         self.cor = cor
         self.tampada = True
-
-        self.cores = {
-            "vermelha": "red",
-            "azul": "blue",
-            "verde": "green",
-            "amarela": "yellow",
-            "preta": "black",
-            "branca": "white"
-        }
 
     def destampar(self):
         self.tampada = False
 
     def escrever(self, texto: str):
-        cor = self.cores[f"{self.cor.lower()}"]
+        cor = self.cor
 
         if self.tampada:
             print(f":no_entry_sign: A [{cor}]caneta[/{cor}] está tampada!")
@@ -42,7 +49,7 @@ c1 = Caneta("azul")
 c2 = Caneta("vermelha")
 c3 = Caneta("verde")
 
-# c1.destampar()
+c1.destampar()
 c2.destampar()
 c3.destampar()
 
