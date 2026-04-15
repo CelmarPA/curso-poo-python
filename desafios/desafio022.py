@@ -1,9 +1,6 @@
+from rich import print
 from rich.panel import Panel
-from rich.bar import Bar
-from rich.console import Group
-from rich.columns import Columns
-from rich.console import Console
-
+from rich.text import Text
 
 class ControleRemoto:
     """
@@ -12,93 +9,105 @@ class ControleRemoto:
     Simula o funcionamento de um controle remoto simples.
     """
 
-    def __init__(self):
-        self.console = Console()
+    canal_min: int = 1
+    canal_max: int = 6
+    volume_min: int = 1
+    volume_max: int = 5
 
+    def __init__(self, canal: int = 1, volume: int = 1) -> None:
         self.ligada: bool = False
-        self.canal: int = 1
-        self.volume: int = 1
-        self.texto: Group = Group(":no_entry_sign: [red]A TV está desligada[/red]")
+        self.canal_atual: int = canal
+        self.volume_atual: int = volume
 
-        self.canal_atual = ""
-        self.volume_atual= ""
+    def liga_desliga(self) -> None:
+        self.ligada = not self.ligada
 
-        self.atualizar_canal()
-        self.atualizar_volume()
+    def canal_mais(self) -> None:
+        if self.ligada:
+            if self.canal_atual == ControleRemoto.canal_max:
+                self.canal_atual = ControleRemoto.canal_min
 
-    def controle(self):
-        while True:
-            self.console.clear()
+            else:
+                self.canal_atual += 1
 
-            if self.ligada:
-                self.texto = Group(
-                    f"CANAL  = {self.canal_atual}",
-                    Columns(["VOLUME =", self.volume_atual], padding=(0,1))
-                )
+    def canal_menos(self) -> None:
+        if self.ligada:
+            if self.canal_atual == ControleRemoto.canal_min:
+                self.canal_atual = ControleRemoto.canal_max
 
-            tv = Panel(self.texto, title="[ TV ]", width=30, expand=False)
+            else:
+                self.canal_atual -= 1
 
-            self.console.print(tv)
+    def volume_mais(self) -> None:
+        if self.ligada:
+            if self.volume_atual != ControleRemoto.volume_max:
+                self.volume_atual += 1
 
-            option = self.console.input(f"< CH{self.canal} >   - VOL{self.volume} + ")
+    def volume_menos(self) -> None:
+        if self.ligada:
+            if self.volume_atual != ControleRemoto.volume_min:
+                self.volume_atual -= 1
 
-            match option:
-                case "0":
-                    break
+    def mostrar_tv(self) -> None:
+        if not self.ligada:
+            conteudo: Text = Text("🚫 A TV está desligada", style="bold red")
 
-                case "@":
-                    self.ligada = not self.ligada
+        else:
+            conteudo = Text("CANAL = ")
 
-                case "<":
-                    if self.canal == 1:
-                        self.canal = 5
+            for canal in range(ControleRemoto.canal_min, ControleRemoto.canal_max + 1):
+                if canal == self.canal_atual:
+                    conteudo.append(f" {canal} ", style="black on yellow")
+                else:
+                    conteudo.append(f" {canal} ")
 
-                    else:
-                        if self.ligada:
-                            self.canal -= 1
+            conteudo.append("\nVOLUME = ")
 
-                case ">":
-                    if self.canal == 5:
-                        self.canal = 1
+            for volume in range(ControleRemoto.volume_min, ControleRemoto.volume_max + 1):
+                if volume <= self.volume_atual:
+                    conteudo.append("█", style="cyan")
 
-                    else:
-                        if self.ligada:
-                            self.canal += 1
+                else:
+                    conteudo.append("█", style="white")
 
-                case "-":
-                    if self.volume == 1:
-                        continue
+        tv: Panel = Panel(conteudo, title="[ TV ]", width=30)
+        print(tv)
 
-                    else:
-                        if self.ligada:
-                            self.volume -= 1
+    def update(self) -> None:
+        if self.ligada:
+            comando: str = input(f"< CH{self.canal_atual} >    - VOL{self.volume_atual} + ")
 
-                case "+":
-                    if self.volume == 5:
-                        continue
+        else:
+            comando: str = input(f"< CH >    - VOL + ")
 
-                    else:
-                        if self.ligada:
-                            self.volume += 1
+        match comando:
+            case "0":
+                return True
 
-            if not self.ligada:
-                self.texto: Group = Group(":no_entry_sign: [red]A TV está desligada[/red]")
+            case "@":
+                c.liga_desliga()
 
-            self.atualizar_canal()
-            self.atualizar_volume()
+            case ">":
+                c.canal_mais()
 
-    def atualizar_canal(self):
-        canais = ["1", "2", "3", "4", "5"]
+            case "<":
+                c.canal_menos()
 
-        canais[self.canal - 1] = f"[on yellow]{self.canal}[/on yellow]"
+            case "+":
+                c.volume_mais()
 
-        self.canal_atual = " ".join(canais)
+            case "-":
+                c.volume_menos()
 
-    def atualizar_volume(self):
-        barra_volume = Bar(5, 0, self.volume, width=5, bgcolor="white", color="cyan")
+        print("\n" * 10)
 
-        self.volume_atual = barra_volume
+        return False
 
 
-c1 = ControleRemoto()
-c1.controle()
+c = ControleRemoto()
+
+while True:
+    c.mostrar_tv()
+
+    if c.update():
+        break
