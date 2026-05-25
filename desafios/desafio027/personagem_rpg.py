@@ -11,6 +11,7 @@ class Personagem(ABC):
         self.vida: int = vida
         self.golpes: list[str] = []
 
+
     def atacar(self, alvo: Personagem, forca: int  = 100):
         if self.vida > 0 and alvo.vida > 0:
             golpe: str = self.golpes[random.randrange(0, len(self.golpes))]
@@ -21,6 +22,7 @@ class Personagem(ABC):
 
         else:
             print(f"O ataque {self.nome} -> {alvo.nome} não pode acontecer!")
+
 
     def receber_dano(self, dano: int):
         fator: int = random.randint(0, dano)
@@ -74,15 +76,3 @@ class Mago(Personagem):
         self.vida += fator
 
         print(f"[blue]{self.nome}[/] fez uma magia de cura e [green]recuperou {fator} pontos[/] de vida.")
-
-
-p1 = Guerreiro("Megaman", 1000)
-p2 = Mago("Merlin", 5000)
-p3 = Guerreiro("Kratos", 1500)
-
-p1.atacar(p2)
-p3.atacar(p1)
-p2.atacar(p3)
-
-p1.curar()
-p2.curar()
