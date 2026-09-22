@@ -4,10 +4,10 @@ from rich import print, inspect
 
 def main():
     c = Credencial()
-    c.senha = "CeV"
+    c.senha = "CeV!@"
 
     inspect(c, private=True, methods=True)
-    print(c.validar("CeV"))
+    print(c.validar("CeV!@"))
 
 
 if __name__ == "__main__":

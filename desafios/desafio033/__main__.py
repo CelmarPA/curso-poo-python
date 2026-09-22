@@ -9,6 +9,8 @@ def main():
     a1.add_curso("MODA")
     a1.curso = "MODA"
 
+    print(a1)
+
     inspect(a1, private=True, methods=True)
 
 

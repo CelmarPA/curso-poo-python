@@ -1,10 +1,10 @@
 import hashlib
-import pwinput
+
 
 class ContaBancaria:
 
-    def __init__(self, id, titular, saldo=0, chave=None):
-        self._id = id
+    def __init__(self, conta_id:int, titular:str, saldo:int|float=0, chave=None):
+        self._id = conta_id
         self._titular = titular
         self.__saldo = saldo
 
@@ -15,12 +15,33 @@ class ContaBancaria:
 
         print(f"Conta {self._id} criada com sucesso. Saldo atual de R${self.__saldo:,.2f}")
 
+    @staticmethod
+    def pede_senha() -> str:
+
+        from pwinput import pwinput
+
+        chave = pwinput(prompt="Senha: ", mask="*")
+
+        return chave
+
+    def validar_senha(self, chave: str) -> bool:
+
+        chave_hash = hashlib.sha256(chave.encode("utf-8")).hexdigest()
+
+        if chave_hash == self.__hash:
+            return True
+
+        return False
+
+    def __str__(self) -> str:
+        return f"Estado atual da conta: {self.__dict__}"
+
     @property
     def nome(self):
         return self._titular
 
     @nome.setter
-    def nome(self, nome):
+    def nome(self, nome: str):
         chave = self.pede_senha()
 
         if not self.validar_senha(chave):
@@ -36,7 +57,7 @@ class ContaBancaria:
         self._titular = nome
         print(f"Nome do titular alterado com sucesso.")
 
-    def depositar(self, valor):
+    def depositar(self, valor:int|float):
         if valor <= 0:
             raise ValueError("Valor para despoisto deve ser maior que zero")
 
@@ -44,13 +65,7 @@ class ContaBancaria:
 
         print(f"Depósito de R${valor:,.2f} autorizado no conta {self._id}")
 
-    @staticmethod
-    def pede_senha() -> str:
-        chave = pwinput.pwinput(prompt="Senha: ", mask="*")
-
-        return chave
-
-    def sacar(self, valor:float, chave: str = None):
+    def sacar(self, valor:int|float, chave: str | None = None):
         if not chave:
             chave = self.pede_senha()
 
@@ -73,10 +88,3 @@ class ContaBancaria:
 
         print(f"Saque de R${valor:,.2f} autorizado na conta {self._id}")
 
-    def validar_senha(self, chave: str) -> bool:
-        chave_hash= hashlib.sha256(chave.encode("utf-8")).hexdigest()
-
-        if chave_hash == self.__hash:
-            return True
-
-        return False

@@ -1,4 +1,4 @@
-import hashlib
+from hashlib import sha256
 
 
 class Credencial:
@@ -12,12 +12,14 @@ class Credencial:
 
     @senha.setter
     def senha(self, senha):
-        hash_object = hashlib.sha256(senha.encode("utf-8"))
+        if len(senha) > 0:
+            self.__hash = sha256(senha.encode("utf-8")).hexdigest()
 
-        self.__hash = hash_object.hexdigest()
+        else:
+            raise ValueError("Senha inválida")
 
     def validar(self, chave):
-        senha_hash = hashlib.sha256(chave.encode("utf-8")).hexdigest()
+        senha_hash = sha256(chave.encode("utf-8")).hexdigest()
 
         if senha_hash == self.senha:
             print("Senha confere!")

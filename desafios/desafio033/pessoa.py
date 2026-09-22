@@ -6,7 +6,8 @@ class Pessoa(ABC):
 
     def __init__(self, nome, nascimento):
         self._nome = nome
-        self._nascimento = nascimento
+        self._nascimento = None
+        self.nascimento = nascimento
 
     @property
     def nascimento(self):
@@ -14,7 +15,7 @@ class Pessoa(ABC):
 
     @nascimento.setter
     def nascimento(self, ano):
-        if not 1926 < ano < datetime.now().year:
+        if not 1900 < ano < datetime.now().year:
             raise ValueError(f"Ano {ano} é inválido")
 
         self._nascimento = ano
@@ -27,5 +28,4 @@ class Pessoa(ABC):
 
     @idade.setter
     def idade(self, idade):
-
         raise PermissionError("Você não pode alterar a idade. Mude o ano de nascimento")

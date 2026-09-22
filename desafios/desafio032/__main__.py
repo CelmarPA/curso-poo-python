@@ -4,7 +4,8 @@ from rich import print, inspect
 
 def main():
     print("Criando a conta...")
-    cc = ContaBancaria(123, "Gustavo", 1000, "Gafanhoto")
+    cc = ContaBancaria(123, "Gustavo", 1_000, "Gafanhoto")
+    # print(cc)
 
     print("Realizando depósito")
     cc.depositar(500)

@@ -3,10 +3,11 @@ from pessoa import Pessoa
 
 class Aluno(Pessoa):
 
+    cursos_oficiais = ["ADM", "ADS", "ENG", "CONT"]
+
     def __init__(self, nome, nascimento, curso):
         super().__init__(nome, nascimento)
-        self.cursos_oficiais = ["ADM", "ADS", "ENG", "CONT"]
-
+        self._curso = None
         self.curso = curso
 
     @property
@@ -19,9 +20,20 @@ class Aluno(Pessoa):
             raise ValueError(f"O curso {curso} não está na lista de cursos oficiais.")
 
         self._curso = curso
-    def add_curso(self, curso: str):
-        if curso not in self.cursos_oficiais:
-            self.cursos_oficiais.append(curso)
+
+    @staticmethod
+    def add_curso(curso: str):
+        curso = curso.strip().upper()
+
+        if 3 <= len(curso) <=5:
+            if curso not in Aluno.cursos_oficiais:
+                Aluno.cursos_oficiais.append(curso)
+
+            else:
+                print(f"O curso {curso} já está na lista de cursos oficiais.")
 
         else:
-            print(f"O curso {curso} já está na lista de cursos oficiais.")
+            raise ValueError(f"Nome {curso} está fora do padrão para Cursos!")
+
+    def __str__(self) -> str:
+        return f"O aluno {self._nome} está matriculado no curso de {self.curso}..."
